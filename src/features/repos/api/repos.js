@@ -1,7 +1,7 @@
 import octokit_api from "../../../lib/github-api-client"
 
 async function fetchUserRepos(username) {
-  response = await octokit_api.request('GET /users/{username}/repos', {
+  const response = await octokit_api.request('GET /users/{username}/repos', {
     username: username,
   })
 
