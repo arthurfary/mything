@@ -5,7 +5,7 @@ async function fetchUserRepos(username) {
     username: username,
   })
 
-  return response
+  return response.data
 }
 
 export default fetchUserRepos

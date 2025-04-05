@@ -1,17 +1,22 @@
 import './App.css'
-import { userRepositories } from './features/repos/hooks/userRepositories'
-
+import { UseAPI } from './features/repos/hooks/UseAPI';
+import fetchUserEvents from "./features/repos/api/userEvents"
 
 function App() {
-  const { data, isLoading, error } = userRepositories('arthurfary')
+  const { data, isLoading, error } = UseAPI(fetchUserEvents, "arthurfary", "PushEvent")
 
   if (isLoading) return <div>loading...</div>;
-  if (error) return <div>error {error}</div>;
-
-  console.log(data)
+  if (error) return <div>error {error.message}</div>;
 
   return (
-    <p>{data}</p>
+    <>
+      {
+        data?.map((event, key) => {
+          return <p key={key}>{event.repo.name}</p>
+        })
+      }
+      < p > hello</p >
+    </>
   )
 }
 
