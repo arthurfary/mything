@@ -1,6 +1,6 @@
 import './App.css'
-import { UseAPI } from './features/repos/hooks/UseAPI';
-import fetchUserEvents from "./features/repos/api/userEvents"
+import { UseAPI } from './features/hooks/UseAPI';
+import fetchUserEvents from "./features/api/userEvents"
 
 function App() {
   const { data, isLoading, error } = UseAPI(fetchUserEvents, "arthurfary", "PushEvent")
@@ -11,8 +11,14 @@ function App() {
   return (
     <>
       {
-        data?.map((event, key) => {
-          return <p key={key}>{event.repo.name}</p>
+        data?.map((event, _) => {
+          {
+            return event.payload.commits?.map((commit, key) => {
+              return (
+                <p key={key}>{commit.url}</p>
+              )
+            })
+          }
         })
       }
       < p > hello</p >
