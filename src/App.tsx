@@ -1,9 +1,13 @@
 import './App.css'
 import { UseAPI } from './features/hooks/UseAPI';
-import fetchUserEvents from "./features/api/userEvents"
+import { fetchUserEvents } from "./features/api/userEvents"
+import { fetchCommitsFromEvents } from "./features/api/userEvents"
 
 function App() {
   const { data, isLoading, error } = UseAPI(fetchUserEvents, "arthurfary", "PushEvent")
+
+  const commitsUrls = fetchCommitsFromEvents(data);
+  console.log("commitsUrls", commitsUrls)
 
   if (isLoading) return <div>loading...</div>;
   if (error) return <div>error {error.message}</div>;
