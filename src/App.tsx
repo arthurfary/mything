@@ -1,8 +1,8 @@
 import './App.css'
-import { UseAPI } from './features/hooks/UseAPI';
 import { fetchUserEvents } from "./features/api/userEvents"
 import { fetchCommitsFromEvents, fetchTreeUrlParentUrlPair } from "./features/api/userEvents"
 import { useState, useEffect } from 'react';
+import { getRecentCommitsPerRepo } from "./features/functions/commits"
 
 function App() {
   const [data, setData] = useState<object[] | null>(null);
@@ -17,7 +17,11 @@ function App() {
         // console.log("pushEvents: ", pushEvents)
 
         const commits = await fetchCommitsFromEvents(pushEvents);
-        // console.log("commits: ", commits)
+        console.log("commits: ", commits)
+
+        const commitsPerRepo = getRecentCommitsPerRepo(commits)
+
+        console.log("commitsPerRepo", commitsPerRepo)
 
         const treePairs = await fetchTreeUrlParentUrlPair(commits);
         // console.log("treePairs: ", treePairs)

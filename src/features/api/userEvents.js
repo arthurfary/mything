@@ -20,7 +20,7 @@ export async function fetchCommitsFromEvents(events) {
   // Flatten the array of arrays into a single array of commits
   const allCommits = allCommitsArrays.flat();
 
-  // Now fetch each commit URL
+  // Now fetch each commit URl
   const commitUrlPromises = allCommits.map(commit => {
     return octokit_api.request(commit.url);
   });
