@@ -5,7 +5,6 @@
  * @returns {Array} - Filtered array with N most recent commits per repository
  */
 
-//TODO: needs to return by repo, currently is just a big list
 export function getRecentCommitsPerRepo(commitData, limit = 3) {
   // Extract repo name from each commit URL
   // Example URL: https://github.com/arthurfary/mything/commit/354f2d03a724c255381611c730b424646bbe74bc
@@ -29,16 +28,19 @@ export function getRecentCommitsPerRepo(commitData, limit = 3) {
     return groups;
   }, {});
 
-  // Sort commits by date (newest first) for each repo and take the top N
-  const filteredCommits = Object.keys(commitsByRepo).flatMap(repoName => {
-    return commitsByRepo[repoName]
-      .sort((a, b) => {
-        const dateA = new Date(a.commit.committer.date);
-        const dateB = new Date(b.commit.committer.date);
-        return dateB - dateA; // Descending order (newest first)
-      })
+
+  const filteredCommits = Object.keys(commitsByRepo).reduce((curr, repoName) => {
+    curr[repoName] = commitsByRepo[repoName].sort((a, b) => {
+      const dateA = new Date(a.commit.committer.date);
+      const dateB = new Date(b.commit.committer.date);
+      return dateB - dateA; // Descending order (newest first)
+    })
       .slice(0, limit);
-  });
+
+    return curr
+  }, {});
+
+  // console.log("filtered", filteredCommits)
 
   return filteredCommits;
 }

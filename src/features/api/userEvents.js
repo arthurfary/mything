@@ -34,23 +34,34 @@ export async function fetchCommitsFromEvents(events) {
 }
 
 export async function fetchTreeUrlParentUrlPair(commitData) {
-  // Create array of promises that will each resolve to a url pair
-  const urlPairsPromises = commitData.map(async commit => {
-    const treeUrl = commit.commit.tree.url;
+  const result = {};
 
-    // Some commits might not have parents (e.g., initial commits)
-    let parentTreeUrl = null;
-    if (commit.parents.length > 0) {
-      const parentCommit = await fetchUrl(commit.parents[0].url);
-      parentTreeUrl = parentCommit.commit.tree.url;
-    }
+  for (const repo of Object.keys(commitData)) {
+    console.log("repo", commitData[repo]); // This shows Array(3) [ {…}, {…}, {…} ]
 
-    return {
-      treeUrl: treeUrl,
-      parentTreeUrl: parentTreeUrl
-    };
-  });
+    const commitPromises = commitData[repo].map(async commit => {
+      const treeUrl = commit.commit.tree.url;
 
-  const urlPairs = await Promise.all(urlPairsPromises);
-  return urlPairs;
+      let parentTreeUrl = null;
+
+      if (commit.parents && commit.parents.length > 0) {
+        try {
+          const parentCommit = await fetchUrl(commit.parents[0].url);
+          parentTreeUrl = parentCommit.commit.tree.url;
+        } catch (error) {
+          console.error(`Error fetching parent commit: ${error.message}`);
+        }
+      }
+
+      return {
+        treeUrl: treeUrl,
+        parentTreeUrl: parentTreeUrl,
+        commitSha: commit.sha
+      };
+    });
+
+    result[repo] = await Promise.all(commitPromises);
+  }
+
+  return result;
 }

@@ -17,18 +17,14 @@ function App() {
         // console.log("pushEvents: ", pushEvents)
 
         const commits = await fetchCommitsFromEvents(pushEvents);
-        console.log("commits: ", commits)
+        // console.log("commits: ", commits)
 
         const commitsPerRepo = getRecentCommitsPerRepo(commits)
+        // console.log("commitsPerRepo", commitsPerRepo)
 
-        console.log("commitsPerRepo", commitsPerRepo)
+        const treePairs = await fetchTreeUrlParentUrlPair(commitsPerRepo);
+        console.log("treePairs: ", treePairs)
 
-        const treePairs = await fetchTreeUrlParentUrlPair(commits);
-        // console.log("treePairs: ", treePairs)
-
-        //TODO: right now its fetching both tree and parent tree
-        // should be able to choose amount of items trees per repo
-        // create the way of showyng difference in a component
         setData(treePairs)
         setError(null)
       }
@@ -49,18 +45,9 @@ function App() {
 
   return (
     <>
-      {
-        data?.map((event, _) => {
-          {
-            return event.payload.commits?.map((commit, key) => {
-              return (
-                <p key={key}>{commit.url}</p>
-              )
-            })
-          }
-        })
-      }
-      < p > hello</p >
+
+
+
     </>
   )
 }
